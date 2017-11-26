@@ -1,0 +1,51 @@
+{
+  "name": "sodabros",
+  "version": "1.0.1",
+  "description": "sodabros mixer bot",
+  "main": "bot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "sodabros",
+  "license": "ISC",
+  "dependencies": {
+    "audio-loader": "^1.0.3",
+    "audio-play": "^2.2.0",
+    "beam-client-node": "^0.13.0",
+    "beam-interactive-node2": "^2.4.0",
+    "carina": "^0.9.1",
+    "colors": "^1.1.2",
+    "discord.io": "^2.5.3",
+    "discord.js": "^11.2.1",
+    "express": "^4.16.2",
+    "express-session": "^1.15.6",
+    "fs": "0.0.1-security",
+    "fs-jetpack": "^1.2.0",
+    "handlebars": "^4.0.11",
+    "johnny-five": "^0.11.7",
+    "live-server": "^1.2.0",
+    "log4js": "^2.3.12",
+    "mysql": "^2.15.0",
+    "node-hue-api": "^2.4.2",
+    "passport": "^0.4.0",
+    "passport-oauth": "^1.0.0",
+    "play-sound": "^1.1.1",
+    "request": "^2.83.0",
+    "robotjs": "^0.4.7",
+    "string": "^3.3.3",
+    "ws": "^3.3.1"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sodabros/sodabros.git"
+  },
+  "keywords": [
+    "mixer",
+    "bot"
+  ],
+  "bugs": {
+    "url": "https://github.com/sodabros/sodabros/issues"
+  },
+  "homepage": "https://github.com/sodabros/sodabros#readme"
+}
