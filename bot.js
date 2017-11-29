@@ -25,8 +25,8 @@ blue = lightState.create().bri(255).xy(0.21,0.2);
 red = lightState.create().bri(255).xy(0.69,0.26);
 purple = lightState.create().bri(255).xy(0.3,0.07);
 yellow = lightState.create().bri(255).xy(0.45,0.5);
-// --------------------------
-// Using a promise
+
+//set default color
 api.setLightState(3, on).done();
 api.setLightState(3, white).done();
 api.setLightState(5, on).done();
@@ -44,6 +44,10 @@ con.connect(function(err) {
   if (err) throw err;
   console.log("Connected!");
 });
+
+//Console Input Initialize
+process.stdin.resume();
+process.stdin.setEncoding('utf8');
 
 //TMI Setup
 var options = {
@@ -87,6 +91,60 @@ function sub(name, x){
 function add(name, x){
   con.query("UPDATE twitch SET points = points + "+x+" WHERE name = '" + name + "'");
 }
+
+process.stdin.on('data', function (text) {
+   text = text.replace(/\n$/, '');
+   //console.log('received data:', util.inspect(text));
+   if(text == "blue"){
+       api.setLightState(3, blue).done();
+           api.setLightState(5, blue).done();
+           setTimeout(function(){
+           api.setLightState(3, white).done();
+           api.setLightState(5, white).done();
+           }, 3000);
+   }
+   if(text == "clear"){
+     client.clear("#thehobbyists");
+   }
+   if (text.includes("to ")){
+     x = text.replace(/to /, '');
+    client.timeout("#thehobbyists", x, 300, "You know why.");
+   }
+   if (text.includes("to ")){
+     x = text.replace(/ban /, '');
+     client.ban("#thehobbyists", x, "You know why.");
+   }
+   if(text == "purple"){
+       api.setLightState(3, purple).done();
+           api.setLightState(5, purple).done();
+           setTimeout(function(){
+           api.setLightState(3, white).done();
+           api.setLightState(5, white).done();
+           }, 3000);
+   }
+   if(text == "red"){
+       api.setLightState(3, red).done();
+           api.setLightState(5, red).done();
+           setTimeout(function(){
+           api.setLightState(3, white).done();
+           api.setLightState(5, white).done();
+         }, 3000);
+   }
+   if(text == "yellow"){
+       api.setLightState(3, yellow).done();
+           api.setLightState(5, yellow).done();
+           setTimeout(function(){
+           api.setLightState(3, white).done();
+           api.setLightState(5, white).done();
+           }, 3000);
+   }
+   if (text === 'quit') {
+     setTimeout(function(){
+       process.exit();
+           }, 1000);
+
+   }
+ });
 
 //Follower Handler
 setInterval(() => {
