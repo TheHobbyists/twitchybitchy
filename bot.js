@@ -106,6 +106,9 @@ process.stdin.on('data', function (text) {
    if(text == "clear"){
      client.clear("#thehobbyists");
    }
+   if(text == "ad"){
+     client.commercial("#thehobbyists", 30);
+   }
    if (text.includes("to ")){
      x = text.replace(/to /, '');
     client.timeout("#thehobbyists", x, 300, "You know why.");
@@ -138,7 +141,8 @@ process.stdin.on('data', function (text) {
            api.setLightState(5, white).done();
            }, 3000);
    }
-   if (text === 'quit') {
+   if (text === 'end') {
+     client.clear("#thehobbyists");
      setTimeout(function(){
        process.exit();
            }, 1000);
@@ -243,14 +247,15 @@ client.on("chat", function(channel, userstate, message, self) {
           if(currentPoints >= amount){
             client.whisper(name, "You have gambled "+amount+" points!");
             state = Math.floor((Math.random() * 2) + 1);
-            ings = Math.floor((Math.random() * amount) + 1);
+            winnings = Math.floor((Math.random() * amount) + 1);
+            losings = Math.floor((Math.random() * amount/2) + 1);
             if(state == 1){
-              client.whisper(name, "You won "+ ings+" additional points!");
-              add(name, ings);
+              client.whisper(name, "You won "+ winnings+" additional points!");
+              add(name, winnings);
             }
             if(state == 2){
-              client.whisper(name, "You lost "+ ings+" of your points...");
-              sub(name, ings);
+              client.whisper(name, "You lost "+ losings+" of your points...");
+              sub(name, losings);
             }
           }
           if(currentPoints < amount){
