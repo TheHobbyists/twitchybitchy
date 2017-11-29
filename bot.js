@@ -80,6 +80,14 @@ client.api({
 });
 */
 
+//MySQL sub and add functions
+function sub(name, x){
+  con.query("UPDATE twitch SET points = points - "+x+" WHERE name = '" + name + "'");
+}
+function add(name, x){
+  con.query("UPDATE twitch SET points = points + "+x+" WHERE name = '" + name + "'");
+}
+
 //Follower Handler
 setInterval(() => {
   client.api({
@@ -92,7 +100,7 @@ setInterval(() => {
       res.body.follows.forEach(user => followArray.unshift(user.user.name));
   });
   let follower = followArray[0];
-  console.log(follower);
+  //console.log(follower);
   con.query('SELECT followed FROM twitch WHERE name LIKE ?', [follower], function(err, result) {
 if (result[0].followed === 0){
 api.setLightState(3, blue).done();
@@ -139,12 +147,13 @@ client.on("subscription", function (channel, username, method, message, userstat
 client.on("chat", function(channel, userstate, message, self) {
   // Don't listen to my own messages..
   if (self) return;
+  let name = userstate["username"];
 
   //Immediately sets up SQL profile if the user doesn't have one
-  con.query('SELECT name FROM twitch WHERE name LIKE ?', [username], function(err, result) {
+  con.query('SELECT name FROM twitch WHERE name LIKE ?', [name], function(err, result) {
     if (err) throw err;
     if (result.length === 0){
-  con.query("INSERT INTO twitch (name, points, followed, admin) VALUES ('" + username + "', 100, 0, 0); ");
+  con.query("INSERT INTO twitch (name, points, followed, admin) VALUES ('" + name + "', 100, 0, 0); ");
     }
     if (result.length > 0){
     };
@@ -152,10 +161,48 @@ client.on("chat", function(channel, userstate, message, self) {
 
   //Checks if it is a command or a message
   if (message.includes(prefix)){
-    console.log(message);
-    client.say(channel, "I have recieved a command.");
-  }
+      command = message.replace(/!/, '');
+      if(command.includes("help")){
+        client.whisper(name, "!gamble # - gamble a specific amount of you points !help - this screen !points - see how many points you have");
+      }
+      if (command.includes("points")){
+        con.query("SELECT points FROM twitch WHERE name LIKE '" + name + "'", function(err, result) {
+
+        if (result.length > 0){
+            console.log(result[0].points);
+            currentPoints = result[0].points;
+            client.whisper(name, "You have "+currentPoints+" points!");
+        }});
+      }
+    if(command.includes("gamble ")){
+      amount = command.replace(/gamble /, '');
+
+      con.query("SELECT points FROM twitch WHERE name LIKE '" + name + "'", function(err, result) {
+
+      if (result.length > 0){
+          console.log(result[0].points);
+          currentPoints = result[0].points;
+          if(currentPoints >= amount){
+            client.whisper(name, "You have gambled "+amount+" points!");
+            state = Math.floor((Math.random() * 2) + 1);
+            ings = Math.floor((Math.random() * amount) + 1);
+            if(state == 1){
+              client.whisper(name, "You won "+ ings+" additional points!");
+              add(name, ings);
+            }
+            if(state == 2){
+              client.whisper(name, "You lost "+ ings+" of your points...");
+              sub(name, ings);
+            }
+          }
+          if(currentPoints < amount){
+            client.whisper(name, "You only have "+currentPoints+" points!");
+          }
+
+      }});
+
+    }
+    }
   else{
-    client.say(channel, "I have recieved a message.");
   }
 });
